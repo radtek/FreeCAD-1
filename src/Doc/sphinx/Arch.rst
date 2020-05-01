@@ -39,6 +39,9 @@ The Arch module is a metamodule that imports useful methods from several of the 
 .. automodule:: ArchRoof
    :members:
 
+.. automodule:: ArchRoof2
+   :members:
+
 .. automodule:: ArchSpace
    :members:
 

@@ -51,6 +51,7 @@ from ArchSectionPlane import *
 from ArchWindow import *
 from ArchAxis import *
 from ArchRoof import *
+from ArchRoof2 import *
 from ArchSpace import *
 from ArchStairs import *
 from ArchRebar import *

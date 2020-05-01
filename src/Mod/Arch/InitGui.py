@@ -61,7 +61,7 @@ class ArchWorkbench(FreeCADGui.Workbench):
                           "Arch_BuildingPart",
                           "Arch_Project", "Arch_Site", "Arch_Building",
                           "Arch_Floor", "Arch_Reference",
-                          "Arch_Window", "Arch_Roof", "Arch_AxisTools",
+                          "Arch_Window", "Arch_Roof", "Arch_Roof2", "Arch_AxisTools",
                           "Arch_SectionPlane", "Arch_Space", "Arch_Stairs",
                           "Arch_PanelTools", "Arch_Equipment",
                           "Arch_Frame", "Arch_Fence", "Arch_Truss",

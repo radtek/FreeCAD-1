@@ -1833,6 +1833,7 @@ def explorer(filename,schema="IFC2X3_TC1.exp"):
                 item.setIcon(1,QtGui.QIcon(":icons/Arch_Window_Tree.svg"))
             elif e.type in ["IFCROOF"]:
                 item.setIcon(1,QtGui.QIcon(":icons/Arch_Roof_Tree.svg"))
+                item.setIcon(1,QtGui.QIcon(":icons/Arch_Roof2_Tree.svg"))
             elif e.type in ["IFCEXTRUDEDAREASOLID","IFCCLOSEDSHELL"]:
                 item.setIcon(1,QtGui.QIcon(":icons/Tree_Part.svg"))
             elif e.type in ["IFCFACE"]:
