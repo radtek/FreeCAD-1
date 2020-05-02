@@ -46,8 +46,18 @@ __title__="FreeCAD Roof"
 __author__ = "Yorik van Havre", "Jonathan Wiedemann"
 __url__ = "http://www.freecadweb.org"
 
+def findMinWireEdge(edges):
+    l = len(edges)
+    obj = dict()
+    obj['length'] = edges[0].Length
+    obj['index'] = 0
+    for i in range(l):
+        if obj['length'] > edges[i].Length:
+            obj['length'] = edges[i].Length
+            obj['index'] = i
+    return obj
 
-def makeRoof(baseobj=None,facenr=0, angles=[45.,], run = [], idrel = [0,],thickness = [50.,], overhang=[100.,], name="Roof"):
+def makeRoof2(baseobj=None,facenr=0, angles=[45.,], run = [], idrel = [0,],thickness = [50.,], overhang=[100.,], name="Roof"):
 
     '''makeRoof(baseobj,[facenr],[angle],[name]) : Makes a roof based on
     a closed wire or an object. You can provide a list of angles, run,
@@ -70,6 +80,7 @@ def makeRoof(baseobj=None,facenr=0, angles=[45.,], run = [], idrel = [0,],thickn
         obj.Base = baseobj
         if hasattr(obj.Base,'Shape'):
             if obj.Base.Shape.Solids:
+                FreeCAD.Console.PrintMessage("meng: Shape.Solids\n")
                 if FreeCAD.GuiUp:
                     obj.Base.ViewObject.hide()
             else:
@@ -77,11 +88,14 @@ def makeRoof(baseobj=None,facenr=0, angles=[45.,], run = [], idrel = [0,],thickn
                     w = obj.Base.Shape.Faces[obj.Face-1].Wires[0]
                     if FreeCAD.GuiUp:
                         obj.Base.ViewObject.hide()
+                    FreeCAD.Console.PrintMessage("meng: Shape.else Faces\n")
                 elif obj.Base.Shape.Wires:
                     w = obj.Base.Shape.Wires[0]
                     if FreeCAD.GuiUp:
+                        FreeCAD.Console.PrintMessage("meng: Shape.else Wires\n")
                         obj.Base.ViewObject.hide()
         if w:
+            FreeCAD.Console.PrintMessage("meng: Wires\n")
             if w.isClosed():
                 if FreeCAD.GuiUp:
                     obj.Base.ViewObject.hide()
@@ -94,12 +108,19 @@ def makeRoof(baseobj=None,facenr=0, angles=[45.,], run = [], idrel = [0,],thickn
                     alist.append(angles[0])
                 obj.Angles=alist
 
-                lr = len(run)
-                rlist = run
-                for i in range(l-lr):
-                    #rlist.append(w.Edges[i].Length/2.)
-                    rlist.append(250.)
+                rlist = []
+                minWireEdge = findMinWireEdge(w.Edges)
+                minWireLength = minWireEdge['length']
+                minWireIndex = minWireEdge['index']
+                FreeCAD.Console.PrintMessage(str(minWireEdge) + "22222222 ,\n")
+                for i in range(l):
+                    # rlist.append(250.)
+                    rlist.append(minWireLength/2.)
+                    FreeCAD.Console.PrintMessage(str(minWireLength/2.) + " ,\n")
+                    
                 obj.Runs = rlist
+
+                
 
                 lidrel = len(idrel)
                 rellist = idrel
@@ -121,7 +142,7 @@ def makeRoof(baseobj=None,facenr=0, angles=[45.,], run = [], idrel = [0,],thickn
     obj.Face = facenr
     return obj
 
-class _CommandRoof:
+class _CommandRoof2:
 
     "the Arch Roof command definition"
 
@@ -149,7 +170,7 @@ class _CommandRoof:
                     idx = int(sel.SubElementNames[0][4:])
                     FreeCAD.ActiveDocument.openTransaction(translate("Arch","Create Roof"))
                     FreeCADGui.addModule("Arch")
-                    FreeCADGui.doCommand("obj = Arch.makeRoof(FreeCAD.ActiveDocument."+obj.Name+","+str(idx)+")")
+                    FreeCADGui.doCommand("obj = Arch.makeRoof2(FreeCAD.ActiveDocument."+obj.Name+","+str(idx)+")")
                     FreeCADGui.addModule("Draft")
                     FreeCADGui.doCommand("Draft.autogroup(obj)")
                     FreeCAD.ActiveDocument.commitTransaction()
@@ -159,7 +180,7 @@ class _CommandRoof:
                 if obj.Shape.Wires:
                     FreeCAD.ActiveDocument.openTransaction(translate("Arch","Create Roof"))
                     FreeCADGui.addModule("Arch")
-                    FreeCADGui.doCommand("obj = Arch.makeRoof(FreeCAD.ActiveDocument."+obj.Name+")")
+                    FreeCADGui.doCommand("obj = Arch.makeRoof2(FreeCAD.ActiveDocument."+obj.Name+")")
                     FreeCADGui.addModule("Draft")
                     FreeCADGui.doCommand("Draft.autogroup(obj)")
                     FreeCAD.ActiveDocument.commitTransaction()
@@ -872,4 +893,4 @@ class _RoofTaskPanel:
                                     QtGui.QApplication.translate("Arch", "Height (mm)", None)])
 
 if FreeCAD.GuiUp:
-    FreeCADGui.addCommand('Arch_Roof2',_CommandRoof())
+    FreeCADGui.addCommand('Arch_Roof2',_CommandRoof2())
